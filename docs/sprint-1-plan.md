@@ -12,3 +12,4 @@ Build core functionality for task tracking system
 | Add Task | Quibra |
 | View Dashboard | Silmaro |
 | Logout | Rapirap |
+| Categorize Tasks | Silmaro |

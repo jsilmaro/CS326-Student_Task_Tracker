@@ -10,3 +10,4 @@
 | Merge conflicts | 4 | 3 | 12 | Use PR workflow | Quibra |
 | Requirement changes | 3 | 4 | 12 | Flexible backlog updates | Rapirap |
 | Security vulnerability | 2 | 5 | 10 | Input validation + auth security | Gentrolizo |
+| Feature complexity increase | 3 | 3 | 9 | Simplify implementation | Rapirap |
