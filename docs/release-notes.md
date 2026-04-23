@@ -3,11 +3,16 @@
 ## Features
 - Added task categorization feature
 - Improved task organization structure
+- Change log utility function added
+- Improved Git workflow practice
+
+## CI Process
+- Simulated CI via PR-based workflow
+- Manual testing before merge
 
 ## Git Updates
 - Implemented branching workflow
 - Practiced merge conflict resolution
 - Standardized commit messages
-
-## Notes
-This release demonstrates SCM workflow including branching, PR, and tagging.
+- Feature branching enforced
+- Clear commit messages used
