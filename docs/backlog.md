@@ -63,3 +63,10 @@ Priority: High | Points: 2
 Acceptance Criteria:
 - Logout button works  
 - User is redirected  
+
+11. As a student, I want to categorize tasks so that I can organize them better  
+Priority: Medium | Points: 5  
+Acceptance Criteria:
+- User can select category  
+- Category is saved  
+- Tasks are grouped by category  
