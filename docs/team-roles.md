@@ -6,6 +6,3 @@
 | Gentrolizo | QA Lead |
 | Quibra | DevOps Lead |
 | Silmaro | Documentation Lead |
-
-## Notes
-Roles may rotate each sprint
