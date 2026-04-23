@@ -55,3 +55,6 @@ Sprint Goal: Build core functionality for task tracking system
 - [Schedule](docs/schedule.md)
 - [Sprint 1 Plan](docs/sprint-1-plan.md)
 - [Team Roles](docs/team-roles.md)
+- [Deployment Plan](docs/deployment-plan.md)
+- [Release Checklist](docs/release-checklist.md)
+- [Support Plan](docs/support-plan.md)
