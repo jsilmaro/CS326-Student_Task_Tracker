@@ -1,5 +1,4 @@
 {
-<<<<<<< HEAD
   "name": "@figma/my-make-file",
   "private": true,
   "version": "0.0.1",
@@ -89,7 +88,7 @@
     }
   }
 }
-=======
+
   "name": "cs326-student_task_tracker",
   "version": "1.0.0",
   "description": "A web-based task tracking system that helps students manage assignments, set deadlines, and monitor their progress.",
