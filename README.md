@@ -105,6 +105,7 @@ Sprint Goal: Build core functionality for task tracking system
 
 ## Docs
 
+<<<<<<< HEAD
 | Document | Description |
 |----------|-------------|
 | [Backlog](docs/backlog.md) | Full user stories with acceptance criteria |
@@ -121,3 +122,24 @@ Sprint Goal: Build core functionality for task tracking system
 | [Support Plan](docs/support-plan.md) | Issue reporting and response times |
 | [Tech Debt](docs/tech-debt.md) | Technical debt items |
 | [Performance](docs/performance.md) | Refactor before/after notes |
+=======
+- [Backlog](docs/backlog.md)
+- [Schedule](docs/schedule.md)
+- [Sprint 1 Plan](docs/sprint-1-plan.md)
+- [Team Roles](docs/team-roles.md)
+- [Deployment Plan](docs/deployment-plan.md)
+- [Release Checklist](docs/release-checklist.md)
+- [Support Plan](docs/support-plan.md)
+
+
+  # Student Task Tracker UI
+
+  This is a code bundle for Student Task Tracker UI. The original project is available at https://www.figma.com/design/fkFZJccaDlMsYQo6F1e1i4/Student-Task-Tracker-UI.
+
+  ## Running the code
+
+  Run `npm i` to install the dependencies.
+
+  Run `npm run dev` to start the development server.
+  
+>>>>>>> 32db75506ee78594b872433ff59ce60b020474a5
