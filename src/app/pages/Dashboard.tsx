@@ -1,130 +1,98 @@
+import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { CheckCircle2, Circle, ArrowRight, TrendingUp, Clock, Calendar as CalendarIcon, Settings } from "lucide-react";
+import { CheckCircle2, Circle, ArrowRight, TrendingUp, Clock, Calendar as CalendarIcon, Settings, Loader2 } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { useNavigate } from "react-router";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { MotivationWidget } from "../components/MotivationWidget";
 import { EmptyState } from "../components/EmptyState";
+import { getTasks, getStats, getUser } from "../services/api";
 
 interface Task {
-  id: string;
+  id: number;
   title: string;
   description: string;
   category: "School" | "Personal" | "Others";
-  dueDate: Date;
+  due_date: string;
   completed: boolean;
+  priority: string;
 }
-
-const sampleTasks: Task[] = [
-  {
-    id: "1",
-    title: "Complete Math Assignment",
-    description: "Chapters 5-7 problem sets",
-    category: "School",
-    dueDate: new Date(2026, 3, 25),
-    completed: false,
-  },
-  {
-    id: "2",
-    title: "Research Paper Draft",
-    description: "History of Renaissance Art - 2000 words",
-    category: "School",
-    dueDate: new Date(2026, 3, 28),
-    completed: false,
-  },
-  {
-    id: "3",
-    title: "Study for Chemistry Exam",
-    description: "Review organic chemistry notes",
-    category: "School",
-    dueDate: new Date(2026, 3, 24),
-    completed: true,
-  },
-  {
-    id: "4",
-    title: "Gym Session",
-    description: "Upper body workout",
-    category: "Personal",
-    dueDate: new Date(2026, 3, 23),
-    completed: true,
-  },
-];
 
 export function Dashboard() {
   const navigate = useNavigate();
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [stats, setStats] = useState({ completedToday: 0, streak: 0 });
+  const [loading, setLoading] = useState(true);
+  const user = getUser();
 
-  const stats = {
-    total: sampleTasks.length,
-    completed: sampleTasks.filter(t => t.completed).length,
-    pending: sampleTasks.filter(t => !t.completed).length,
-  };
+  useEffect(() => {
+    async function load() {
+      try {
+        const [taskData, statData] = await Promise.all([getTasks(), getStats()]);
+        setTasks(taskData);
+        setStats(statData);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
 
-  const recentTasks = sampleTasks.slice(0, 3);
-  const completionRate = Math.round((stats.completed / stats.total) * 100);
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
-  // Motivation widget data
-  const completedToday = 2; // Mock data - in real app, filter by today's date
-  const streak = 5; // Mock data - calculate from completion history
+  const total = tasks.length;
+  const completed = tasks.filter(t => t.completed).length;
+  const pending = tasks.filter(t => !t.completed).length;
+  const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
+  const recentTasks = tasks.slice(0, 3);
+
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Morning" : hour < 18 ? "Afternoon" : "Evening";
 
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto">
-      {/* Welcome Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="mb-8"
-      >
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="mb-8">
         <h1 className="text-4xl md:text-5xl mb-3" style={{ fontFamily: "var(--font-heading)" }}>
-          Good {new Date().getHours() < 12 ? "Morning" : new Date().getHours() < 18 ? "Afternoon" : "Evening"}
+          Good {greeting}{user?.name ? `, ${user.name.split(" ")[0]}` : ""}
         </h1>
-        <p className="text-lg text-muted-foreground">
-          Here's an overview of your academic progress
-        </p>
+        <p className="text-lg text-muted-foreground">Here's an overview of your academic progress</p>
       </motion.div>
 
-      {/* Motivation Widget */}
       <div className="mb-8">
         <MotivationWidget
-          completedToday={completedToday}
-          streak={streak}
-          totalTasks={stats.total}
-          completedTotal={stats.completed}
+          completedToday={stats.completedToday}
+          streak={stats.streak}
+          totalTasks={total}
+          completedTotal={completed}
         />
       </div>
 
-      {/* Analytics Cards */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-        className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8"
-      >
+      {/* Stats */}
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         {[
-          { label: "Total Tasks", value: stats.total, icon: CheckCircle2, color: "primary", trend: "+2 this week" },
-          { label: "Completed", value: stats.completed, icon: CheckCircle2, color: "accent", trend: "Great work!" },
-          { label: "Pending", value: stats.pending, icon: Clock, color: "muted", trend: `${stats.pending} remaining` },
-          { label: "Completion", value: `${completionRate}%`, icon: TrendingUp, color: "primary", trend: "On track" },
-        ].map((stat, index) => {
+          { label: "Total Tasks", value: total, icon: CheckCircle2, trend: `${total} tasks` },
+          { label: "Completed", value: completed, icon: CheckCircle2, trend: "Great work!" },
+          { label: "Pending", value: pending, icon: Clock, trend: `${pending} remaining` },
+          { label: "Completion", value: `${completionRate}%`, icon: TrendingUp, trend: "On track" },
+        ].map((stat, i) => {
           const Icon = stat.icon;
           return (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 + 0.2, duration: 0.5 }}
-              whileHover={{ y: -4, scale: 1.02 }}
-              className="bg-white rounded-2xl p-6 border border-border shadow-sm hover:shadow-lg transition-all duration-300 group cursor-pointer"
-            >
+            <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 + 0.2 }} whileHover={{ y: -4, scale: 1.02 }}
+              className="bg-white rounded-2xl p-6 border border-border shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer">
               <div className="flex items-start justify-between mb-4">
-                <div className={`p-3 rounded-xl bg-${stat.color}/10 group-hover:bg-${stat.color}/20 transition-colors duration-300`}>
-                  <Icon className={`w-5 h-5 text-${stat.color}`} />
-                </div>
+                <div className="p-3 rounded-xl bg-primary/10"><Icon className="w-5 h-5 text-primary" /></div>
               </div>
               <p className="text-sm text-muted-foreground mb-1">{stat.label}</p>
-              <p className="text-4xl mb-2" style={{ fontFamily: "var(--font-heading)" }}>
-                {stat.value}
-              </p>
+              <p className="text-4xl mb-2" style={{ fontFamily: "var(--font-heading)" }}>{stat.value}</p>
               <p className="text-xs text-muted-foreground">{stat.trend}</p>
             </motion.div>
           );
@@ -132,136 +100,68 @@ export function Dashboard() {
       </motion.div>
 
       {/* Recent Tasks */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4, duration: 0.5 }}
-      >
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-3xl mb-2" style={{ fontFamily: "var(--font-heading)" }}>
-              Recent Tasks
-            </h2>
-            <p className="text-muted-foreground">
-              Your latest assignments and activities
-            </p>
+            <h2 className="text-3xl mb-2" style={{ fontFamily: "var(--font-heading)" }}>Recent Tasks</h2>
+            <p className="text-muted-foreground">Your latest assignments and activities</p>
           </div>
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            <Button
-              onClick={() => navigate("/app/tasks")}
-              className="rounded-xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white shadow-md hover:shadow-lg h-12 px-6 group transition-all duration-300"
-            >
-              <span>View All</span>
-              <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-200 group-hover:translate-x-1" />
-            </Button>
-          </motion.div>
+          <Button onClick={() => navigate("/app/tasks")}
+            className="rounded-xl bg-gradient-to-r from-primary to-primary/80 text-white shadow-md h-12 px-6 group">
+            <span>View All</span>
+            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+          </Button>
         </div>
 
         <div className="space-y-4">
           {recentTasks.length === 0 ? (
             <EmptyState onAddTask={() => navigate("/app/tasks")} type="tasks" />
-          ) : (
-            recentTasks.map((task, index) => (
-            <motion.div
-              key={task.id}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.1 + 0.5, duration: 0.3 }}
-              whileHover={{ x: 4, scale: 1.01 }}
-              className={`bg-white rounded-2xl p-6 border border-border shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer ${
-                task.completed ? "opacity-60" : ""
-              }`}
-            >
-              <div className="flex items-start gap-4">
-                <div className="mt-1">
-                  {task.completed ? (
-                    <CheckCircle2 className="w-6 h-6 text-primary" />
-                  ) : (
-                    <Circle className="w-6 h-6 text-muted-foreground" />
-                  )}
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <h3
-                    className={`text-xl mb-2 ${task.completed ? "line-through" : ""}`}
-                    style={{ fontFamily: "var(--font-heading)" }}
-                  >
-                    {task.title}
-                  </h3>
-                  <p className="text-muted-foreground mb-3">{task.description}</p>
-                  <div className="flex items-center gap-3">
-                    <span className={`px-3 py-1 rounded-lg text-sm ${
-                      task.category === "School" ? "bg-primary/10 text-primary" :
-                      task.category === "Personal" ? "bg-accent/10 text-accent" :
-                      "bg-secondary text-foreground"
-                    }`}>
-                      {task.category}
-                    </span>
-                    <span className="text-sm text-muted-foreground">
-                      Due: {format(task.dueDate, "MMM dd, yyyy")}
-                    </span>
+          ) : recentTasks.map((task, i) => {
+            const dueDate = task.due_date ? parseISO(task.due_date) : null;
+            return (
+              <motion.div key={task.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.1 + 0.5 }} whileHover={{ x: 4, scale: 1.01 }}
+                className={`bg-white rounded-2xl p-6 border border-border shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer ${task.completed ? "opacity-60" : ""}`}>
+                <div className="flex items-start gap-4">
+                  <div className="mt-1">
+                    {task.completed ? <CheckCircle2 className="w-6 h-6 text-primary" /> : <Circle className="w-6 h-6 text-muted-foreground" />}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className={`text-xl mb-2 ${task.completed ? "line-through" : ""}`} style={{ fontFamily: "var(--font-heading)" }}>
+                      {task.title}
+                    </h3>
+                    <p className="text-muted-foreground mb-3">{task.description}</p>
+                    <div className="flex items-center gap-3">
+                      <span className={`px-3 py-1 rounded-lg text-sm ${
+                        task.category === "School" ? "bg-primary/10 text-primary" :
+                        task.category === "Personal" ? "bg-accent/10 text-accent" : "bg-secondary text-foreground"
+                      }`}>{task.category}</span>
+                      {dueDate && <span className="text-sm text-muted-foreground">Due: {format(dueDate, "MMM dd, yyyy")}</span>}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          )))}
+              </motion.div>
+            );
+          })}
         </div>
       </motion.div>
 
       {/* Quick Actions */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8, duration: 0.5 }}
-        className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6"
-      >
-        <motion.button
-          onClick={() => navigate("/app/tasks")}
-          whileHover={{ y: -4, scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="bg-gradient-to-br from-primary via-primary/90 to-primary/70 text-white rounded-2xl p-6 text-left shadow-md hover:shadow-2xl transition-all duration-300 relative overflow-hidden group"
-        >
-          <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          <CheckCircle2 className="w-8 h-8 mb-3 relative z-10 group-hover:scale-110 transition-transform duration-300" />
-          <h3 className="text-xl mb-2 relative z-10" style={{ fontFamily: "var(--font-heading)" }}>
-            Manage Tasks
-          </h3>
-          <p className="text-sm opacity-90 relative z-10">
-            Add, edit, and organize your assignments
-          </p>
-        </motion.button>
-
-        <motion.button
-          onClick={() => navigate("/app/calendar")}
-          whileHover={{ y: -4, scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="bg-gradient-to-br from-accent via-accent/90 to-accent/70 text-white rounded-2xl p-6 text-left shadow-md hover:shadow-2xl transition-all duration-300 relative overflow-hidden group"
-        >
-          <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          <CalendarIcon className="w-8 h-8 mb-3 relative z-10 group-hover:scale-110 transition-transform duration-300" />
-          <h3 className="text-xl mb-2 relative z-10" style={{ fontFamily: "var(--font-heading)" }}>
-            View Calendar
-          </h3>
-          <p className="text-sm opacity-90 relative z-10">
-            See your schedule and upcoming deadlines
-          </p>
-        </motion.button>
-
-        <motion.button
-          onClick={() => navigate("/app/settings")}
-          whileHover={{ y: -4, scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="bg-gradient-to-br from-secondary via-muted to-secondary/70 text-foreground rounded-2xl p-6 text-left shadow-md hover:shadow-2xl transition-all duration-300 relative overflow-hidden group"
-        >
-          <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          <Settings className="w-8 h-8 mb-3 relative z-10 group-hover:scale-110 transition-transform duration-300" />
-          <h3 className="text-xl mb-2 relative z-10" style={{ fontFamily: "var(--font-heading)" }}>
-            Settings
-          </h3>
-          <p className="text-sm opacity-90 relative z-10">
-            Customize your experience
-          </p>
-        </motion.button>
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}
+        className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+        {[
+          { label: "Manage Tasks", desc: "Add, edit, and organize your assignments", icon: CheckCircle2, path: "/app/tasks", style: "from-primary via-primary/90 to-primary/70 text-white" },
+          { label: "View Calendar", desc: "See your schedule and upcoming deadlines", icon: CalendarIcon, path: "/app/calendar", style: "from-accent via-accent/90 to-accent/70 text-white" },
+          { label: "Settings", desc: "Customize your experience", icon: Settings, path: "/app/settings", style: "from-secondary via-muted to-secondary/70 text-foreground" },
+        ].map(({ label, desc, icon: Icon, path, style }) => (
+          <motion.button key={label} onClick={() => navigate(path)} whileHover={{ y: -4, scale: 1.02 }} whileTap={{ scale: 0.98 }}
+            className={`bg-gradient-to-br ${style} rounded-2xl p-6 text-left shadow-md hover:shadow-2xl transition-all duration-300 relative overflow-hidden group`}>
+            <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <Icon className="w-8 h-8 mb-3 relative z-10 group-hover:scale-110 transition-transform duration-300" />
+            <h3 className="text-xl mb-2 relative z-10" style={{ fontFamily: "var(--font-heading)" }}>{label}</h3>
+            <p className="text-sm opacity-90 relative z-10">{desc}</p>
+          </motion.button>
+        ))}
       </motion.div>
     </div>
   );

@@ -1,18 +1,32 @@
 import { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
-import { BookOpen, LayoutDashboard, CheckSquare, Calendar, Settings, LogOut, User, Menu, X, ChevronLeft, ChevronRight, UserCircle, Mail } from "lucide-react";
+import {
+  BookOpen, LayoutDashboard, CheckSquare, Calendar, Settings,
+  LogOut, User, Menu, X, ChevronRight, UserCircle,
+} from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { Avatar, AvatarFallback } from "../components/ui/avatar";
 import { Button } from "../components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../components/ui/tooltip";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../components/ui/dropdown-menu";
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
+  DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
+} from "../components/ui/dropdown-menu";
 import { GrainOverlay } from "../components/GrainOverlay";
+import { logout, getUser } from "../services/api";
 
 export function RootLayout() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const user = getUser();
+  const initials = user?.name ? user.name.split(" ").map((n: string) => n[0]).join("").toUpperCase() : "?";
+
+  function handleLogout() {
+    logout();
+    navigate("/");
+  }
 
   const navItems = [
     { id: "dashboard", icon: LayoutDashboard, label: "Dashboard", path: "/app/dashboard" },
@@ -194,7 +208,7 @@ export function RootLayout() {
                   }`}
                 >
                   <Avatar className="w-12 h-12 border-2 border-primary">
-                    <AvatarFallback className="bg-primary text-white">JD</AvatarFallback>
+                    <AvatarFallback className="bg-primary text-white">{initials}</AvatarFallback>
                   </Avatar>
                   <AnimatePresence>
                     {!isCollapsed && (
@@ -205,8 +219,8 @@ export function RootLayout() {
                         transition={{ duration: 0.2 }}
                         className="flex-1 overflow-hidden text-left"
                       >
-                        <p className="font-medium whitespace-nowrap">John Doe</p>
-                        <p className="text-xs text-muted-foreground whitespace-nowrap">john.doe@university.edu</p>
+                        <p className="font-medium whitespace-nowrap">{user?.name || "User"}</p>
+                        <p className="text-xs text-muted-foreground whitespace-nowrap">{user?.email || ""}</p>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -245,7 +259,7 @@ export function RootLayout() {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={() => navigate("/")}
+                  onClick={handleLogout}
                   className="rounded-xl cursor-pointer py-3 px-3 text-destructive focus:text-destructive focus:bg-destructive/10"
                 >
                   <LogOut className="w-4 h-4 mr-3" />
