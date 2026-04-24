@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "@figma/my-make-file",
   "private": true,
   "version": "0.0.1",
@@ -88,3 +89,31 @@
     }
   }
 }
+=======
+  "name": "cs326-student_task_tracker",
+  "version": "1.0.0",
+  "description": "A web-based task tracking system that helps students manage assignments, set deadlines, and monitor their progress.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jsilmaro/CS326-Student_Task_Tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jsilmaro/CS326-Student_Task_Tracker/issues"
+  },
+  "homepage": "https://github.com/jsilmaro/CS326-Student_Task_Tracker#readme",
+  "devDependencies": {
+    "jest": "^30.3.0"
+  }
+}
+>>>>>>> e05d4b4243ad6f44bb0715305a6e7089ac54ae3a
