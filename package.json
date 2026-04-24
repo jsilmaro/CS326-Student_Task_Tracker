@@ -1,11 +1,17 @@
 {
-  "name": "@figma/my-make-file",
+  "name": "cs326-student_task_tracker",
+  "version": "1.0.0",
+  "description": "A web-based task tracking system that helps students manage assignments, set deadlines, and monitor their progress.",
   "private": true,
-  "version": "0.0.1",
   "type": "module",
   "scripts": {
+    "dev": "vite",
     "build": "vite build",
-    "dev": "vite"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jsilmaro/CS326-Student_Task_Tracker.git"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
@@ -67,6 +73,7 @@
   "devDependencies": {
     "@tailwindcss/vite": "4.1.12",
     "@vitejs/plugin-react": "4.7.0",
+    "jest": "^30.3.0",
     "tailwindcss": "4.1.12",
     "vite": "6.3.5"
   },
@@ -86,32 +93,5 @@
     "overrides": {
       "vite": "6.3.5"
     }
-  }
-}
-{
-  "name": "cs326-student_task_tracker",
-  "version": "1.0.0",
-  "description": "A web-based task tracking system that helps students manage assignments, set deadlines, and monitor their progress.",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
-  "scripts": {
-    "test": "jest"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jsilmaro/CS326-Student_Task_Tracker.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/jsilmaro/CS326-Student_Task_Tracker/issues"
-  },
-  "homepage": "https://github.com/jsilmaro/CS326-Student_Task_Tracker#readme",
-  "devDependencies": {
-    "jest": "^30.3.0"
   }
 }

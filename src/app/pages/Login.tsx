@@ -6,6 +6,7 @@ import { Label } from "../components/ui/label";
 import { motion } from "motion/react";
 import { BookOpen } from "lucide-react";
 import { GrainOverlay } from "../components/GrainOverlay";
+import { login, register } from "../services/api";
 
 export function Login() {
   const navigate = useNavigate();
@@ -13,10 +14,25 @@ export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    navigate("/app/dashboard");
+    setError("");
+    setLoading(true);
+    try {
+      if (isSignUp) {
+        await register(name, email, password);
+      } else {
+        await login(email, password);
+      }
+      navigate("/app/dashboard");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -114,11 +130,16 @@ export function Login() {
               <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Button
                   type="submit"
+                  disabled={loading}
                   className="w-full h-12 rounded-xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white shadow-lg hover:shadow-xl transition-all duration-300"
                 >
-                  {isSignUp ? "Create Account" : "Sign In"}
+                  {loading ? "Please wait..." : isSignUp ? "Create Account" : "Sign In"}
                 </Button>
               </motion.div>
+
+              {error && (
+                <p className="text-sm text-red-500 text-center">{error}</p>
+              )}
             </form>
 
             <div className="mt-6 text-center">
