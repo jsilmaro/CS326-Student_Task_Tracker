@@ -1,8 +1,3 @@
-# Student Task Tracker
-
-Frontend UI integrated from Figma export.
-Collaborative project for CS326 Software Engineering.
-
 # CS326 - Student Task Tracker
 
 A web-based task tracking system that helps students manage assignments, set deadlines, and monitor their progress.
@@ -63,4 +58,15 @@ Sprint Goal: Build core functionality for task tracking system
 - [Deployment Plan](docs/deployment-plan.md)
 - [Release Checklist](docs/release-checklist.md)
 - [Support Plan](docs/support-plan.md)
->>>>>>> e05d4b4243ad6f44bb0715305a6e7089ac54ae3a
+
+
+  # Student Task Tracker UI
+
+  This is a code bundle for Student Task Tracker UI. The original project is available at https://www.figma.com/design/fkFZJccaDlMsYQo6F1e1i4/Student-Task-Tracker-UI.
+
+  ## Running the code
+
+  Run `npm i` to install the dependencies.
+
+  Run `npm run dev` to start the development server.
+  
