@@ -11,26 +11,30 @@ jobs:
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
 
-      - name: Install Jest
-        run: npm install jest --no-save
+      - name: Install Jest in activity folder
+        run: npm install
+        working-directory: activity
 
       - name: Run Jest tests
-        run: npx jest activity/ --forceExit --testEnvironment=node
-        env:
-          NODE_OPTIONS: --experimental-vm-modules
+        run: npx jest --forceExit
+        working-directory: activity
 
   # ── Job 2: Build Frontend ────────────────────────────────────────────────
   build:
     name: Build Frontend
     runs-on: ubuntu-latest
     needs: test
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
 
@@ -40,7 +44,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: pnpm
 
       - name: Install dependencies

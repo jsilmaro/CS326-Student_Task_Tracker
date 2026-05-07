@@ -1,0 +1,11 @@
+{
+  "name": "activity",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "scripts": {
+    "test": "jest --forceExit"
+  },
+  "devDependencies": {
+    "jest": "^30.3.0"
+  }
+}
