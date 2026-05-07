@@ -122,6 +122,11 @@ Sprint Goal: Build core functionality for task tracking system
 | [Support Plan](docs/support-plan.md) | Issue reporting and response times |
 | [Tech Debt](docs/tech-debt.md) | Technical debt items |
 | [Performance](docs/performance.md) | Refactor before/after notes |
+| [Security Checklist](docs/security-checklist.md) | Secure coding checklist and audit results |
+| [CI/CD Diagram](docs/cicd-diagram.md) | Pipeline stages and diagram |
+| [Ethics & Impact](docs/ethics-impact.md) | Stakeholders, ethical risks, mitigations |
+| [Privacy Note](docs/privacy-note.md) | Data collected, retention, user rights |
+| [IP & Attribution](docs/ip-and-attribution.md) | License, third-party libraries, assets |
 =======
 - [Backlog](docs/backlog.md)
 - [Schedule](docs/schedule.md)
