@@ -384,7 +384,7 @@ export function RootLayout() {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       onClick={() => {
-                        navigate("/");
+                        handleLogout();
                         setIsMobileMenuOpen(false);
                       }}
                       className="rounded-xl cursor-pointer py-3 px-3 text-destructive focus:text-destructive focus:bg-destructive/10"

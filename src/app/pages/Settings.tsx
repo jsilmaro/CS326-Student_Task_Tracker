@@ -8,7 +8,7 @@ import { Switch } from "../components/ui/switch";
 import { Separator } from "../components/ui/separator";
 import { Avatar, AvatarFallback } from "../components/ui/avatar";
 import { useTheme, themeColors, type ColorTheme } from "../contexts/ThemeContext";
-import { getUser, updateProfile, changePassword, updateNotifications, deleteAccount } from "../services/api";
+import { getUser, getProfile, updateProfile, changePassword, updateNotifications, deleteAccount } from "../services/api";
 import { useNavigate } from "react-router";
 
 const colorThemes: { id: ColorTheme; name: string; description: string }[] = [
@@ -44,9 +44,28 @@ export function Settings() {
 
   // Load fresh user data on mount
   useEffect(() => {
-    if (storedUser) {
-      setProfile({ name: storedUser.name, email: storedUser.email, university: storedUser.university || "" });
+    async function hydrateFromBackend() {
+      if (storedUser) {
+        setProfile({ name: storedUser.name, email: storedUser.email, university: storedUser.university || "" });
+      }
+      try {
+        const fresh = await getProfile();
+        setProfile({
+          name: fresh.name || "",
+          email: fresh.email || "",
+          university: fresh.university || "",
+        });
+        setNotifications({
+          taskReminders: Boolean(fresh.notif_task_reminders),
+          dailyDigest: Boolean(fresh.notif_daily_digest),
+          weeklyReport: Boolean(fresh.notif_weekly_report),
+        });
+      } catch (err) {
+        console.error(err);
+      }
     }
+
+    hydrateFromBackend();
   }, []);
 
   const handleProfileSave = async () => {

@@ -6,6 +6,23 @@ const authMiddleware = require("../middleware/auth");
 const router = express.Router();
 router.use(authMiddleware);
 
+// GET /api/users/profile — fetch current profile + preferences
+router.get("/profile", async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT id, name, email, university,
+              notif_task_reminders, notif_daily_digest, notif_weekly_report
+       FROM users
+       WHERE id = $1`,
+      [req.userId]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: "User not found" });
+    res.json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 // PUT /api/users/profile — update name, email, university
 router.put("/profile", async (req, res) => {
   const { name, email, university } = req.body;

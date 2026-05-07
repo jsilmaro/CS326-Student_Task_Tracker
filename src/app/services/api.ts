@@ -48,6 +48,24 @@ export function getUser() {
   return user ? JSON.parse(user) : null;
 }
 
+export async function getProfile() {
+  const res = await fetch(`${BASE_URL}/users/profile`, { headers: authHeaders() });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error);
+  const mergedUser = {
+    ...getUser(),
+    id: json.id,
+    name: json.name,
+    email: json.email,
+    university: json.university,
+    notif_task_reminders: json.notif_task_reminders,
+    notif_daily_digest: json.notif_daily_digest,
+    notif_weekly_report: json.notif_weekly_report,
+  };
+  localStorage.setItem("user", JSON.stringify(mergedUser));
+  return json;
+}
+
 // User / Profile
 export async function updateProfile(data: { name?: string; email?: string; university?: string }) {
   const res = await fetch(`${BASE_URL}/users/profile`, {
