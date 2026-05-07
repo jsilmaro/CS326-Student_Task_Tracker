@@ -1,6 +1,7 @@
 const express = require("express");
 const { pool } = require("../db");
 const authMiddleware = require("../middleware/auth");
+const { validateTask } = require("../middleware/validate");
 
 const router = express.Router();
 router.use(authMiddleware);
@@ -63,7 +64,7 @@ router.get("/", async (req, res) => {
 });
 
 // POST /api/tasks — create a task
-router.post("/", async (req, res) => {
+router.post("/", validateTask, async (req, res) => {
   const { title, description, category, due_date, priority } = req.body;
   if (!title) return res.status(400).json({ error: "Title is required" });
 
@@ -80,7 +81,7 @@ router.post("/", async (req, res) => {
 });
 
 // PUT /api/tasks/:id — update a task
-router.put("/:id", async (req, res) => {
+router.put("/:id", validateTask, async (req, res) => {
   const { title, description, category, due_date, completed, priority } = req.body;
   try {
     const result = await pool.query(
