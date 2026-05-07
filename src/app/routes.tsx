@@ -1,5 +1,6 @@
 import { createBrowserRouter, redirect } from "react-router";
 import { Login } from "./pages/Login";
+import { Landing } from "./pages/Landing";
 import { Dashboard } from "./pages/Dashboard";
 import { Tasks } from "./pages/Tasks";
 import { Calendar as CalendarPage } from "./pages/Calendar";
@@ -8,7 +9,7 @@ import { RootLayout } from "./layouts/RootLayout";
 
 function requireAuth() {
   if (!localStorage.getItem("token")) {
-    return redirect("/");
+    return redirect("/login");
   }
   return null;
 }
@@ -23,6 +24,10 @@ function requireGuest() {
 export const router = createBrowserRouter([
   {
     path: "/",
+    Component: Landing,
+  },
+  {
+    path: "/login",
     loader: requireGuest,
     Component: Login,
   },
