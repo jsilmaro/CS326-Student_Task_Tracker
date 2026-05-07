@@ -234,11 +234,11 @@ export function RootLayout() {
                 <DropdownMenuLabel className="px-3 py-2">
                   <div className="flex items-center gap-3">
                     <Avatar className="w-10 h-10 border-2 border-primary">
-                      <AvatarFallback className="bg-primary text-white">JD</AvatarFallback>
+                      <AvatarFallback className="bg-primary text-white">{initials}</AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">John Doe</p>
-                      <p className="text-xs text-muted-foreground truncate">john.doe@university.edu</p>
+                      <p className="font-medium truncate">{user?.name || "User"}</p>
+                      <p className="text-xs text-muted-foreground truncate">{user?.email || ""}</p>
                     </div>
                   </div>
                 </DropdownMenuLabel>
@@ -336,11 +336,11 @@ export function RootLayout() {
                   <DropdownMenuTrigger asChild>
                     <button className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-sidebar-accent transition-all duration-200">
                       <Avatar className="w-12 h-12 border-2 border-primary">
-                        <AvatarFallback className="bg-primary text-white">JD</AvatarFallback>
+                        <AvatarFallback className="bg-primary text-white">{initials}</AvatarFallback>
                       </Avatar>
                       <div className="flex-1 text-left">
-                        <p className="font-medium">John Doe</p>
-                        <p className="text-xs text-muted-foreground">john.doe@university.edu</p>
+                        <p className="font-medium">{user?.name || "User"}</p>
+                        <p className="text-xs text-muted-foreground">{user?.email || ""}</p>
                       </div>
                     </button>
                   </DropdownMenuTrigger>
@@ -352,11 +352,11 @@ export function RootLayout() {
                     <DropdownMenuLabel className="px-3 py-2">
                       <div className="flex items-center gap-3">
                         <Avatar className="w-10 h-10 border-2 border-primary">
-                          <AvatarFallback className="bg-primary text-white">JD</AvatarFallback>
+                          <AvatarFallback className="bg-primary text-white">{initials}</AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium truncate">John Doe</p>
-                          <p className="text-xs text-muted-foreground truncate">john.doe@university.edu</p>
+                          <p className="font-medium truncate">{user?.name || "User"}</p>
+                          <p className="text-xs text-muted-foreground truncate">{user?.email || ""}</p>
                         </div>
                       </div>
                     </DropdownMenuLabel>
@@ -443,11 +443,11 @@ export function RootLayout() {
                 <DropdownMenuLabel className="px-3 py-2">
                   <div className="flex items-center gap-3">
                     <Avatar className="w-10 h-10 border-2 border-primary">
-                      <AvatarFallback className="bg-primary text-white">JD</AvatarFallback>
+                      <AvatarFallback className="bg-primary text-white">{initials}</AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">John Doe</p>
-                      <p className="text-xs text-muted-foreground truncate">john.doe@university.edu</p>
+                      <p className="font-medium truncate">{user?.name || "User"}</p>
+                      <p className="text-xs text-muted-foreground truncate">{user?.email || ""}</p>
                     </div>
                   </div>
                 </DropdownMenuLabel>
@@ -468,7 +468,7 @@ export function RootLayout() {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={() => navigate("/")}
+                  onClick={handleLogout}
                   className="rounded-xl cursor-pointer py-3 px-3 text-destructive focus:text-destructive focus:bg-destructive/10"
                 >
                   <LogOut className="w-4 h-4 mr-3" />
@@ -491,11 +491,11 @@ export function RootLayout() {
                 <DropdownMenuLabel className="px-3 py-2">
                   <div className="flex items-center gap-3">
                     <Avatar className="w-10 h-10 border-2 border-primary">
-                      <AvatarFallback className="bg-primary text-white">JD</AvatarFallback>
+                      <AvatarFallback className="bg-primary text-white">{initials}</AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">John Doe</p>
-                      <p className="text-xs text-muted-foreground truncate">john.doe@university.edu</p>
+                      <p className="font-medium truncate">{user?.name || "User"}</p>
+                      <p className="text-xs text-muted-foreground truncate">{user?.email || ""}</p>
                     </div>
                   </div>
                 </DropdownMenuLabel>
@@ -516,7 +516,7 @@ export function RootLayout() {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={() => navigate("/")}
+                  onClick={handleLogout}
                   className="rounded-xl cursor-pointer py-3 px-3 text-destructive focus:text-destructive focus:bg-destructive/10"
                 >
                   <LogOut className="w-4 h-4 mr-3" />
